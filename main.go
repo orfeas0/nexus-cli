@@ -14,7 +14,7 @@ const (
 nexus_host = "{{ .Host }}"
 nexus_username = "{{ .Username }}"
 nexus_password = "{{ .Password }}"
-nexus_repository = "{{ .Repository }}"`
+nexus_certificate = "{{ .Certificate }}"`
 )
 
 func main() {
@@ -103,11 +103,11 @@ func main() {
 }
 
 func setNexusCredentials(c *cli.Context) error {
-	var hostname, repository, username, password string
+	var hostname, certificate, username, password string
 	fmt.Print("Enter Nexus Host: ")
 	fmt.Scan(&hostname)
-	fmt.Print("Enter Nexus Repository Name: ")
-	fmt.Scan(&repository)
+	fmt.Print("Enter Nexus Certificate Path: ")
+	fmt.Scan(&certificate)
 	fmt.Print("Enter Nexus Username: ")
 	fmt.Scan(&username)
 	fmt.Print("Enter Nexus Password: ")
@@ -117,12 +117,12 @@ func setNexusCredentials(c *cli.Context) error {
 		Host       string
 		Username   string
 		Password   string
-		Repository string
+		certificate string
 	}{
 		hostname,
 		username,
 		password,
-		repository,
+		certificatae,
 	}
 
 	tmpl, err := template.New(".credentials").Parse(CREDENTIALS_TEMPLATES)

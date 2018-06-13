@@ -20,7 +20,7 @@ type Registry struct {
 	Host       string `toml:"nexus_host"`
 	Username   string `toml:"nexus_username"`
 	Password   string `toml:"nexus_password"`
-	Repository string `toml:"nexus_repository"`
+	Certificate string `toml:"nexus_certificate"`
 }
 
 type Repositories struct {
