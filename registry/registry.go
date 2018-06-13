@@ -7,6 +7,10 @@ import (
 	"github.com/BurntSushi/toml"
 	"net/http"
 	"os"
+	"io/ioutil"
+    "crypto/tls"
+    "crypto/x509"
+    "log"
 )
 
 const ACCEPT_HEADER = "application/vnd.docker.distribution.manifest.v2+json"
@@ -55,9 +59,21 @@ func NewRegistry() (Registry, error) {
 }
 
 func (r Registry) ListImages() ([]string, error) {
-	client := &http.Client{}
+	caCert, err := ioutil.ReadFile("ca.crt")
+    if err != nil {
+            log.Fatal(err)
+    }
+    caCertPool := x509.NewCertPool()
+    caCertPool.AppendCertsFromPEM(caCert)
 
-	url := fmt.Sprintf("%s/repository/%s/v2/_catalog", r.Host, r.Repository)
+    client := &http.Client{
+            Transport: &http.Transport{
+                    TLSClientConfig: &tls.Config{
+                            RootCAs:        caCertPool,
+                    },
+            },
+    }
+	url := fmt.Sprintf("%s/v2/_catalog",r.Host)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
@@ -82,9 +98,22 @@ func (r Registry) ListImages() ([]string, error) {
 }
 
 func (r Registry) ListTagsByImage(image string) ([]string, error) {
-	client := &http.Client{}
+	caCert, err := ioutil.ReadFile("ca.crt")
+    if err != nil {
+            log.Fatal(err)
+    }
+    caCertPool := x509.NewCertPool()
+    caCertPool.AppendCertsFromPEM(caCert)
 
-	url := fmt.Sprintf("%s/repository/%s/v2/%s/tags/list", r.Host, r.Repository, image)
+    client := &http.Client{
+            Transport: &http.Transport{
+                    TLSClientConfig: &tls.Config{
+                            RootCAs:        caCertPool,
+                    },
+            },
+    }
+
+	url := fmt.Sprintf("%s/v2/%s/tags/list", r.Host, image)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
@@ -110,9 +139,22 @@ func (r Registry) ListTagsByImage(image string) ([]string, error) {
 
 func (r Registry) ImageManifest(image string, tag string) (ImageManifest, error) {
 	var imageManifest ImageManifest
-	client := &http.Client{}
+	caCert, err := ioutil.ReadFile("ca.crt")
+    if err != nil {
+            log.Fatal(err)
+    }
+    caCertPool := x509.NewCertPool()
+    caCertPool.AppendCertsFromPEM(caCert)
 
-	url := fmt.Sprintf("%s/repository/%s/v2/%s/manifests/%s", r.Host, r.Repository, image, tag)
+    client := &http.Client{
+            Transport: &http.Transport{
+                    TLSClientConfig: &tls.Config{
+                            RootCAs:        caCertPool,
+                    },
+            },
+    }
+
+	url := fmt.Sprintf("%s/v2/%s/manifests/%s", r.Host, image, tag)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return imageManifest, err
@@ -141,9 +183,22 @@ func (r Registry) DeleteImageByTag(image string, tag string) error {
 	if err != nil {
 		return err
 	}
-	client := &http.Client{}
+	caCert, err := ioutil.ReadFile("ca.crt")
+    if err != nil {
+            log.Fatal(err)
+    }
+    caCertPool := x509.NewCertPool()
+    caCertPool.AppendCertsFromPEM(caCert)
 
-	url := fmt.Sprintf("%s/repository/%s/v2/%s/manifests/%s", r.Host, r.Repository, image, sha)
+    client := &http.Client{
+            Transport: &http.Transport{
+                    TLSClientConfig: &tls.Config{
+                            RootCAs:        caCertPool,
+                    },
+            },
+    }
+
+	url := fmt.Sprintf("%s/v2/%s/manifests/%s", r.Host, image, sha)
 	req, err := http.NewRequest("DELETE", url, nil)
 	if err != nil {
 		return err
@@ -167,9 +222,22 @@ func (r Registry) DeleteImageByTag(image string, tag string) error {
 }
 
 func (r Registry) getImageSHA(image string, tag string) (string, error) {
-	client := &http.Client{}
+	caCert, err := ioutil.ReadFile("ca.crt")
+    if err != nil {
+            log.Fatal(err)
+    }
+    caCertPool := x509.NewCertPool()
+    caCertPool.AppendCertsFromPEM(caCert)
 
-	url := fmt.Sprintf("%s/repository/%s/v2/%s/manifests/%s", r.Host, r.Repository, image, tag)
+    client := &http.Client{
+            Transport: &http.Transport{
+                    TLSClientConfig: &tls.Config{
+                            RootCAs:        caCertPool,
+                    },
+            },
+    }
+
+	url := fmt.Sprintf("%s/v2/%s/manifests/%s", r.Host, image, tag)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return "", err
