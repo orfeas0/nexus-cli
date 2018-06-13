@@ -122,7 +122,7 @@ func setNexusCredentials(c *cli.Context) error {
 		hostname,
 		username,
 		password,
-		certificatae,
+		certificate,
 	}
 
 	tmpl, err := template.New(".credentials").Parse(CREDENTIALS_TEMPLATES)
