@@ -59,7 +59,7 @@ func NewRegistry() (Registry, error) {
 }
 
 func (r Registry) ListImages() ([]string, error) {
-	caCert, err := ioutil.ReadFile("ca.crt")
+	caCert, err := ioutil.ReadFile(r.Certificate)
     if err != nil {
             log.Fatal(err)
     }
@@ -98,7 +98,7 @@ func (r Registry) ListImages() ([]string, error) {
 }
 
 func (r Registry) ListTagsByImage(image string) ([]string, error) {
-	caCert, err := ioutil.ReadFile("ca.crt")
+	caCert, err := ioutil.ReadFile(r.Certificate)
     if err != nil {
             log.Fatal(err)
     }
@@ -139,7 +139,7 @@ func (r Registry) ListTagsByImage(image string) ([]string, error) {
 
 func (r Registry) ImageManifest(image string, tag string) (ImageManifest, error) {
 	var imageManifest ImageManifest
-	caCert, err := ioutil.ReadFile("ca.crt")
+	caCert, err := ioutil.ReadFile(r.Certificate)
     if err != nil {
             log.Fatal(err)
     }
@@ -183,7 +183,7 @@ func (r Registry) DeleteImageByTag(image string, tag string) error {
 	if err != nil {
 		return err
 	}
-	caCert, err := ioutil.ReadFile("ca.crt")
+	caCert, err := ioutil.ReadFile(r.Certificate)
     if err != nil {
             log.Fatal(err)
     }
@@ -222,7 +222,7 @@ func (r Registry) DeleteImageByTag(image string, tag string) error {
 }
 
 func (r Registry) getImageSHA(image string, tag string) (string, error) {
-	caCert, err := ioutil.ReadFile("ca.crt")
+	caCert, err := ioutil.ReadFile(r.Certificate)
     if err != nil {
             log.Fatal(err)
     }
