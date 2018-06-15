@@ -117,7 +117,7 @@ func setNexusCredentials(c *cli.Context) error {
 		Host       string
 		Username   string
 		Password   string
-		Certificate string
+		certificate string
 	}{
 		hostname,
 		username,
