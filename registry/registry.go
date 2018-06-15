@@ -76,20 +76,6 @@ func (r Registry) GetClient() (*http.Client) {
 }
 
 func (r Registry) ListImages() ([]string, error) {
-	/*caCert, err := ioutil.ReadFile(r.Certificate)
-    if err != nil {
-            log.Fatal(err)
-    }
-    caCertPool := x509.NewCertPool()
-    caCertPool.AppendCertsFromPEM(caCert)
-
-    client := &http.Client{
-            Transport: &http.Transport{
-                    TLSClientConfig: &tls.Config{
-                            RootCAs:        caCertPool,
-                    },
-            },
-    }*/
     client := r.GetClient()
 	url := fmt.Sprintf("%s/v2/_catalog",r.Host)
 	req, err := http.NewRequest("GET", url, nil)
@@ -116,20 +102,7 @@ func (r Registry) ListImages() ([]string, error) {
 }
 
 func (r Registry) ListTagsByImage(image string) ([]string, error) {
-	caCert, err := ioutil.ReadFile(r.Certificate)
-    if err != nil {
-            log.Fatal(err)
-    }
-    caCertPool := x509.NewCertPool()
-    caCertPool.AppendCertsFromPEM(caCert)
-
-    client := &http.Client{
-            Transport: &http.Transport{
-                    TLSClientConfig: &tls.Config{
-                            RootCAs:        caCertPool,
-                    },
-            },
-    }
+	client := r.GetClient()
 
 	url := fmt.Sprintf("%s/v2/%s/tags/list", r.Host, image)
 	req, err := http.NewRequest("GET", url, nil)
@@ -157,20 +130,7 @@ func (r Registry) ListTagsByImage(image string) ([]string, error) {
 
 func (r Registry) ImageManifest(image string, tag string) (ImageManifest, error) {
 	var imageManifest ImageManifest
-	caCert, err := ioutil.ReadFile(r.Certificate)
-    if err != nil {
-            log.Fatal(err)
-    }
-    caCertPool := x509.NewCertPool()
-    caCertPool.AppendCertsFromPEM(caCert)
-
-    client := &http.Client{
-            Transport: &http.Transport{
-                    TLSClientConfig: &tls.Config{
-                            RootCAs:        caCertPool,
-                    },
-            },
-    }
+	client := r.GetClient()
 
 	url := fmt.Sprintf("%s/v2/%s/manifests/%s", r.Host, image, tag)
 	req, err := http.NewRequest("GET", url, nil)
@@ -201,20 +161,7 @@ func (r Registry) DeleteImageByTag(image string, tag string) error {
 	if err != nil {
 		return err
 	}
-	caCert, err := ioutil.ReadFile(r.Certificate)
-    if err != nil {
-            log.Fatal(err)
-    }
-    caCertPool := x509.NewCertPool()
-    caCertPool.AppendCertsFromPEM(caCert)
-
-    client := &http.Client{
-            Transport: &http.Transport{
-                    TLSClientConfig: &tls.Config{
-                            RootCAs:        caCertPool,
-                    },
-            },
-    }
+	client := r.GetClient()
 
 	url := fmt.Sprintf("%s/v2/%s/manifests/%s", r.Host, image, sha)
 	req, err := http.NewRequest("DELETE", url, nil)
@@ -240,20 +187,7 @@ func (r Registry) DeleteImageByTag(image string, tag string) error {
 }
 
 func (r Registry) getImageSHA(image string, tag string) (string, error) {
-	caCert, err := ioutil.ReadFile(r.Certificate)
-    if err != nil {
-            log.Fatal(err)
-    }
-    caCertPool := x509.NewCertPool()
-    caCertPool.AppendCertsFromPEM(caCert)
-
-    client := &http.Client{
-            Transport: &http.Transport{
-                    TLSClientConfig: &tls.Config{
-                            RootCAs:        caCertPool,
-                    },
-            },
-    }
+	client := r.GetClient()
 
 	url := fmt.Sprintf("%s/v2/%s/manifests/%s", r.Host, image, tag)
 	req, err := http.NewRequest("GET", url, nil)
