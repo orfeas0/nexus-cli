@@ -58,8 +58,25 @@ func NewRegistry() (Registry, error) {
 	return r, nil
 }
 
-func (r Registry) ListImages() ([]string, error) {
+func (r Registry) GetClient() (*http.Client) {
 	caCert, err := ioutil.ReadFile(r.Certificate)
+	if err != nil {
+		log.Print(err)
+		return &http.Client{}
+	}
+	caCertPool := x509.NewCertPool()
+	caCertPool.AppendCertsFromPEM(caCert)
+	return &http.Client {
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				RootCAs:	caCertPool,
+			},
+		},
+	}
+}
+
+func (r Registry) ListImages() ([]string, error) {
+	/*caCert, err := ioutil.ReadFile(r.Certificate)
     if err != nil {
             log.Fatal(err)
     }
@@ -72,7 +89,8 @@ func (r Registry) ListImages() ([]string, error) {
                             RootCAs:        caCertPool,
                     },
             },
-    }
+    }*/
+    client := r.GetClient()
 	url := fmt.Sprintf("%s/v2/_catalog",r.Host)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
