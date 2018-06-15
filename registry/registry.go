@@ -62,23 +62,28 @@ func (r Registry) ListImages() ([]string, error) {
 	caCert, err := ioutil.ReadFile(r.Certificate)
     if err != nil {
             log.Fatal(err)
+            client := &http.Client{}
     }
-    caCertPool := x509.NewCertPool()
-    caCertPool.AppendCertsFromPEM(caCert)
+    else {
+	    caCertPool := x509.NewCertPool()
+	    caCertPool.AppendCertsFromPEM(caCert)
 
-    client := &http.Client{
-            Transport: &http.Transport{
-                    TLSClientConfig: &tls.Config{
-                            RootCAs:        caCertPool,
-                    },
-            },
-    }
+	    client := &http.Client{
+	            Transport: &http.Transport{
+	                    TLSClientConfig: &tls.Config{
+	                            RootCAs:        caCertPool,
+	                    },
+	            },
+	    }
+	}
 	url := fmt.Sprintf("%s/v2/_catalog",r.Host)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
 	}
-	req.SetBasicAuth(r.Username, r.Password)
+	if r.Username != '-' {
+		req.SetBasicAuth(r.Username, r.Password)
+	}
 	req.Header.Add("Accept", ACCEPT_HEADER)
 
 	resp, err := client.Do(req)
