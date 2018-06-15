@@ -109,7 +109,9 @@ func (r Registry) ListTagsByImage(image string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
+	if r.username != "-" {
 	req.SetBasicAuth(r.Username, r.Password)
+}
 	req.Header.Add("Accept", ACCEPT_HEADER)
 
 	resp, err := client.Do(req)
@@ -137,7 +139,9 @@ func (r Registry) ImageManifest(image string, tag string) (ImageManifest, error)
 	if err != nil {
 		return imageManifest, err
 	}
+	if r.username != "-" {
 	req.SetBasicAuth(r.Username, r.Password)
+}
 	req.Header.Add("Accept", ACCEPT_HEADER)
 
 	resp, err := client.Do(req)
@@ -168,7 +172,9 @@ func (r Registry) DeleteImageByTag(image string, tag string) error {
 	if err != nil {
 		return err
 	}
+	if r.username != "-" {
 	req.SetBasicAuth(r.Username, r.Password)
+}
 	req.Header.Add("Accept", ACCEPT_HEADER)
 
 	resp, err := client.Do(req)
@@ -194,7 +200,9 @@ func (r Registry) getImageSHA(image string, tag string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	if r.username != "-" {
 	req.SetBasicAuth(r.Username, r.Password)
+}
 	req.Header.Add("Accept", ACCEPT_HEADER)
 
 	resp, err := client.Do(req)
